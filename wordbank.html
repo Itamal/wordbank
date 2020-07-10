@@ -1,0 +1,404 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>wordbank</title>
+    <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+<!--    <link rel="shortcut icon" href="/images/Favicon.png" type="image/png">-->
+<!--    <link rel="apple-touch-icon" href="/images/Favicon.png" type="image/png">-->
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+
+    <style>
+html {
+    scroll-behavior: smooth;
+}
+abox {
+    font-size:2vw;
+}
+.displaybox {
+    margin: 0.5vmin;
+}
+#mainbox {
+    font-family: monospace, Helvetica;
+    font-size:8vw;
+    text-align:center;
+    width: 100%;
+    float: left;
+    transition: 1s;
+    /*margin: 1vmin;*/
+}
+#storybox{
+    font-size:2vw;
+}
+
+#languagebox {
+    /*border: 1vmin solid white;*/
+    font-family: monospace, Helvetica;
+    font-size:5vw;
+    text-align:center;
+    width: 100%;
+    float: left;
+    margin-top: 2vh;
+    transition: 1s;
+}
+
+#keybox {
+    font-family: monospace, Helvetica;
+    font-size:5vw;
+    text-align:center;
+    width: 100%;
+    float: left;
+    margin-top: 2vh;
+    transition: 1s;
+}
+
+#pbar {
+    padding: 0px 0px 0px 0px;
+    width: 1%;
+    height: 5vw;
+    background-color: #69547c;
+    text-align: left; /* To center it horizontally (if you want) */
+    line-height: 37px; /* To center it vertically */
+    opacity: 0.85;
+    color: #69547c;
+    font-size: 1pt;
+    transition: all 0.5s ease-in-out;
+    border-radius: 2vw;
+    margin-top: 4px;
+    margin-left: 8px;
+    margin-right: 8px;
+    /*margin-bottom: 8px;*/
+}
+    </style>
+</head>
+
+<body>
+  <div id="myProgress" class="clickyClick" style="position:fixed;">
+    <div id="pbar" class="clickyClick">1%</div>
+<!--		<div id="ebar">-->
+<!--			<svg viewBox="0 0 450 25">-->
+<!--				<text id="progemo" x="4" y="22">-->
+<!--				</text>-->
+<!--			</svg>-->
+<!--		</div>-->
+    <div id="loadingText" class="clickyClick"></div>
+<!--		<div id="barMenu" class="clickyClick">-->
+<!--			<a href="/user-reset"><img src="images/CenoPlus.png" style="width:10vw;height:100%;border:0;"></a>-->
+<!--			<a href="/analytics"><img src="images/CenoStop.png" style="width:10vw;height:100%;border:0;"></a>-->
+<!--			<a href="/missing-puddle"><img src="images/CenoPuddle.png" style="width:10vw;height:100%;border:0;"></a>-->
+<!--		</div>-->
+  </div>
+    <div id="languagebox">
+    </div>
+    <div id="storybox">
+    </div>
+
+    <div id="gameplay" style="display: none">
+
+        <div id="mainbox" style="">
+            <a class="displaybox" id="🐳">🐳
+            </a>
+             <!-- //todo add box around last -->
+
+        </div>
+        <div id="keybox" >
+            <a class="displaybox" >        לִוְיָתָן
+            </a>
+            <a class="displaybox" >🐳
+            </a>
+            <a class="displaybox" >        לִוְיָתָן
+            </a>
+            <a class="displaybox" >🐳
+            </a>
+
+</div>
+</div>
+</body>
+<script>
+    // let wordBankRaw = [["emoji","english","hebrew","chinese","french","norwegian"],["💫","great","מדהים","大","génial","flott"],["🐳","whale","לִוְיָתָן","鲸","baleine","hval"],["☂️","umbrella","מִטְרִיָּה","伞","parapluie","paraply"],["🌳","tree","עץ","木","arbre","tre"],["🍽","eat","לאכול","吃","manger","spise"],["🍎","apple","תפוח","苹","pomme","eple"],["📈","grow","לגדול","增长","grandir","vokse"],["💪","strong","חזק","强大","fort","sterk"]];
+let wordBankRaw =
+    [["emoji","english","hebrew","chinese","french","norwegian"],["🙂","happy","שַׂמֵחַ","快乐","heureux","lykkelig"],["😉","wink","קְרִיצָה","眨眼","clin d'œil","blunke"],["🥰","love","אהבה","爱","l'amour","kjærlighet"],["😷","mask","מסכה","面具","masque","maske"],["🤒","sick","חוֹלֶה","生病","malade","syk"],["🤠","cowboy","בּוֹקֵר","牛仔","cow-boy","cowboy"],["☹ ","sad","עָצוּב","伤心","triste","lei seg"],["💀","skull","גולגולת","头骨","crâne","hodeskalle"],["💩","poo","צואה","便便","caca","poo"],["🤡","clown","לֵיצָן","小丑","pitre","klovn"],["👻","ghost","רוּחַ","鬼","fantôme","spøkelse"],["👽","alien","חייזר","外星人","extraterrestre","romvesen"],["🤖","robot","רוֹבּוֹט","机器人","robot","robot"],["🖐","hand","יד","手","main","hånd"],["🤝","handshake","לחיצת ידיים","握手","poignée de main","håndtrykk"],["✍ ","write","לִכתוֹב","写","écrire","skrive"],["💅","nailpolish","לק ציפורניים","指甲油","vernis à ongle","neglelakk"],["🤳","selfie","Selfie","自拍","selfie","selfie"],["💪","strong","חָזָק","强大","fort","sterk"],["🦵","leg","רגל","腿","jambe","bein"],["🦶","foot","כף רגל","脚丫子","pied","fot"],["👂","ear","אֹזֶן","耳","oreille","øre"],["🦻","hearingaid","מכשיר שמיעה","助听器","aide auditive","høreapparat"],["👃","nose","אף","鼻子","nez","nese"],["🧠","brain","מוֹחַ","脑","cerveau","hjerne"],["🦷","tooth","שן","齿","dent","tann"],["🦴","bone","עֶצֶם","骨","OS","bein"],["👁","eye","עַיִן","眼","œil","øye"],["👅","toungue","לשון","舌头","toungue","toungue"],["👄","mouth","פֶּה","口","bouche","munn"],["👶","baby","תִינוֹק","宝宝","bébé","baby"],["👦","boy","יֶלֶד","男孩","garçon","gutt"],["👧","girl","ילדה","女孩","fille","pike"],["👴","grandpa","סָבָּא","爷爷","grand-père","bestefar"],["👵","grandma","סַבתָא","奶奶","grand-mère","bestemor"],["👮","police","מִשׁטָרָה","警察","police","politiet"],["👷","builder","בּוֹנֶה","建造者","constructeur","bygger"],["👼","angel","מַלְאָך","天使","ange","engel"],["🧟","zombie","מְטוּמטָם","僵尸","zombi","zombie"],["🚶","walk","לָלֶכֶת","步行","marche","gå"],["🏃","run","לָרוּץ","跑","courir","løpe"],["💃","dance","לִרְקוֹד","舞蹈","Danse","danse"],["🧘","meditate","לְהַרהֵר","幽思","méditer","meditere"],["☂ ","umbrella","מִטְרִיָה","雨伞","parapluie","paraply"],["🧶","yarn","חוּט","纱","fil","garn"],["👓","glasses","משקפיים","眼镜","des lunettes","briller"],["🕶","sunglasses","מישקפי שמש","墨镜","des lunettes de soleil","solbriller"],["👕","shirt","חוּלצָה","衬衫","chemise","skjorte"],["👖","pants","מִכְנָסַיִים","裤子","un pantalon","bukser"],["🧣","scarf","צָעִיף","围巾","écharpe","skjerf"],["🧤","gloves","כפפות","手套","gants","hansker"],["🧥","coat","מעיל","涂层","manteau","frakk"],["🧦","socks","גרביים","袜子","chaussettes","sokker"],["👗","dress","שמלה","连衣裙","robe","kjole"],["👘","kimono","קִימוֹנוֹ","和服","kimono","kimono"],["🥻","sari","סארי","纱丽","sari","sari"],["👜","bag","תיק","袋","sac","bag"],["💄","lipstick","שְׂפָתוֹן","口红","rouge à lèvres","leppestift"],["💍","ring","טַבַּעַת","环","bague","ringe"],["🐒","monkey","קוֹף","猴","singe","ape"],["🦍","gorilla","גוֹרִילָה","大猩猩","gorille","gorilla"],["🐕","dog","כֶּלֶב","狗","chien","hund"],["🦝","raccoon","דביבון","狸","raton laveur","vaskebjørn"],["🐈","cat","חתול","猫","chat","katt"],["🦁","lion","אַריֵה","狮子","Lion","løve"],["🐅","tiger","נָמֵר","虎","tigre","tiger"],["🐎","horse","סוּס","马","cheval","hest"],["🦄","unicorn","חַדקֶרֶן","独角兽","Licorne","Enhjørning"],["🦓","zebra","זֶבּרָה","斑马","zèbre","sebra"],["🦌","deer","צְבִי","鹿","cerf","hjort"],["🐄","cow","פָּרָה","牛","vache","ku"],["🐖","pig","חֲזִיר","猪","porc","gris"],["🐑","sheep","כבשים","羊","mouton","sau"],["🐐","goat","עֵז","山羊","chèvre","geit"],["🐫","camel","גָמָל","骆驼","chameau","kamel"],["🦙","llama","לָאמָה","骆驼","lama","llama"],["🦒","giraffe","ג'ִירָפָה","长颈鹿","girafe","sjiraff"],["🐘","elephant","פיל","象","l'éléphant","elefant"],["🦏","rhino","קַרנַף","犀牛","rhinocéros","neshorn"],["🦛","hippo","היפופוטם","河马","hippopotame","flodhest"],["🐁","mouse","עכבר","老鼠","Souris","mus"],["🐇","rabbit","ארנב","兔子","lapin","kanin"],["🦔","hedgehog","קִפּוֹד","刺猬","hérisson","pinnsvin"],["🦇","bat","עטלף","蝙蝠","chauve souris","flaggermus"],["🐻","bear","דוב","熊","ours","Bjørn"],["🐨","koala","קוֹאָלָה","考拉","koala","koala"],["🐼","randa","רנדה","兰达","randa","randa"],["🦥","sloth","עַצלוּת","懒惰","la paresse","dovendyr"],["🦦","otter","לוּטרָה","獭","loutre","oter"],["🦨","skunk","בּוּאֵשׁ","臭鼬","moufette","stinkdyr"],["🦘","kangaroo","קנגרו","袋鼠","kangourou","kenguru"],["🦃","turkey","טורקיה","火鸡","dinde","Tyrkia"],["🐓","chicken","עוף","鸡","poulet","kylling"],["🐦","bird","ציפור","鸟","oiseau","fugl"],["🐧","penguin","פינגווין","企鹅","manchot","pingvin"],["🕊","dove","יוֹנָה","鸽子","Colombe","due"],["🦅","eagle","נשר","鹰","Aigle","Ørn"],["🦆","duck","ברווז","鸭","canard","and"],["🦢","swan","בַּרבּוּר","天鹅","cygne","svane"],["🦉","owl","יַנשׁוּף","猫头鹰","hibou","ugle"],["🦩","flamingo","פלָמִינגוֹ","火烈鸟","flamant","flamingo"],["🦚","peacock","טַוָס","孔雀","paon","påfugl"],["🦜","parrot","תוּכִּי","鹦鹉","perroquet","papegøye"],["🐸","frog","צְפַרְדֵעַ","青蛙","grenouille","frosk"],["🐊","crocodile","תַנִין","鳄鱼","crocodile","krokodille"],["🐢","turtle","צָב","龟","tortue","skilpadde"],["🐍","snake","נָחָשׁ","蛇","serpent","slange"],["🐳","whale","לוויתן","鲸","baleine","hval"],["🐬","dolphin","דולפין","海豚","dauphin","delfin"],["🐠","fish","דג","鱼","poisson","fisk"],["🦈","shark","כריש","鲨鱼","requin","hai"],["🐙","octopus","תמנון","章鱼","poulpe","blekksprut"],["🐌","snail","שַׁבְּלוּל","蜗牛","escargot","snegl"],["🦋","butterfly","פַּרְפַּר","蝴蝶","papillon","sommerfugl"],["🐜","ant","נְמָלָה","蚂蚁","fourmi","maur"],["🐝","bee","דבורה","蜜蜂","abeille","Bie"],["🐞","beetle","חיפושית","甲虫","scarabée","bille"],["🕷","spider","עַכָּבִישׁ","蜘蛛","spide","edderkopp"],["🦂","scorpion","עַקרָב","蝎","Scorpion","skorpion"],["🦟","mosquito","יַתוּשׁ","蚊子","moustique","mygg"],["🦠","microbe","חַידַק","微生物","microbe","mikrobe"],["🌻","flower","פֶּרַח","花","fleur","blomst"],["🌲","tree","עֵץ","树","arbre","tre"],["🌵","cactus","קַקטוּס","仙人掌","cactus","kaktus"],["🍄","mushroom","פטרייה","蘑菇","champignon","sopp"],["🦞","lobster","לובסטר","龙虾","Homard","hummer"],["🌘","moon","ירח","月亮","lune","måne"],["☀ ","sun","שמש","太阳","Soleil","sol"],["☁ ","cloud","ענן","云","nuage","Sky"],["🌪","tornado","טוֹרנָדוֹ","龙卷风","tornade","tornado"],["🔥","fire","אֵשׁ","火","Feu","Brann"],["🍇","grapes","ענבים","葡萄","les raisins","druer"],["🍉","watermelon","אבטיח","西瓜","pastèque","vannmelon"],["🍊","orange","תפוז","橙子","Orange","oransje"],["🍋","lemon","לימון","柠檬","citron","sitron"],["🍌","banana","בננה","香蕉","banane","banan"],["🍍","pinapple","אננס","菠萝","ananas","ananas"],["🥭","mango","מנגו","芒果","mangue","mango"],["🍎","apple","תפוח עץ","苹果","Pomme","eple"],["🍐","pear","אגס","梨","poire","pære"],["🍑","peach","אפרסק","桃子","pêche","fersken"],["🍒","cherries","דובדבנים","樱桃","cerises","kirsebær"],["🍓","strawberry","תּוּת","草莓","fraise","jordbær"],["🥝","kiwi","קיווי","猕猴桃","kiwi","kiwi"],["🍅","tomato","עגבנייה","番茄","tomate","tomat"],["🥥","coconut","קוקוס","椰子","noix de coco","kokosnøtt"],["🥑","avocado","אבוקדו","鳄梨","Avocat","avokado"],["🍆","eggplant","חציל","茄子","aubergine","aubergine"],["🥔","potato","תפוח אדמה","土豆","Patate","potet"],["🥕","carrot","גזר","胡萝卜","carotte","gulrot"],["🌽","corn","תירס","玉米","blé","korn"],["🥒","cucumber","מלפפון","黄瓜","concombre","agurk"],["🥦","broccoli","ברוקולי","西兰花","brocoli","brokkoli"],["🧄","garlic","שום","大蒜","Ail","hvitløk"],["🧅","onion","בצל","洋葱","oignon","løk"],["🥜","peanuts","בוטנים","花生","cacahuètes","peanøtter"],["🍞","bread","לחם","面包","pain","brød"],["🧀","cheese","גבינה","起司","fromage","ost"],["🥩","meat","בָּשָׂר","肉","Viande","kjøtt"],["🧈","butter","חמאה","牛油","beurre","smør"],["🧂","salt","מלח","盐","sel","salt"],["🥫","can","פחית","能够","pouvez","kan"],["🍪","cookie","עוגייה","曲奇饼","biscuit","kjeks"],["🧊","ice","קרח","冰","la glace","is"],["🥢","chopsticks","מקלות אכילה","筷子","baguettes","spisepinner"],["🥄","spoon","כף","勺","cuillère","skje"],["🧗","climb","לְטַפֵּס","爬","montée","klatre"],["⛷ ","ski","סקִי","滑雪","ski","ski"],["🏂","snowboard","סנובורד","单板滑雪","snowboard","snowboard"],["🏌","golf","גוֹלף","高尔夫球","le golf","golf"],["🏄","surf","לִגלוֹשׁ","冲浪","le surf","surf"],["🏊","swim","לשחות","游泳","nager","svømme"],["🚴","bike","אופניים","自行车","bicyclette","sykkel"],["🧘","meditate","לְהַרהֵר","幽思","méditer","meditere"],["🛶","canoe","קָנוֹ","独木舟","canoë","kano"],["🏆","win","לנצח","赢得","gagner","vinne"],["🥎","ball","כַּדוּר","球","Balle","ball"],["🎷","saxophone","סַקסוֹפוֹן","萨克斯风","saxophone","saksofon"],["🎸","guitar","גִיטָרָה","吉他","guitare","gitar"],["🎹","piano","פְּסַנְתֵר","钢琴","piano","piano"],["🎺","trumpet","חֲצוֹצְרָה","喇叭","trompette","trompet"],["🥁","drum","תוֹף","鼓","tambour","tromme"],["⛰ ","mountain","הַר","山","Montagne","fjell"],["🌋","volcano","הַר גַעַשׁ","火山","volcan","vulkan"],["🏠","house","בַּיִת","屋","maison","hus"],["⛺ ","tent","אוֹהֶל","帐篷","tente","telt"],["🚅","train","רכבת","培养","train","tog"],["🚌","bus","אוֹטוֹבּוּס","总线","autobus","buss"],["🚑","ambulance","אַמבּוּלַנס","救护车","ambulance","ambulanse"],["🚓","police","מִשׁטָרָה","警察","police","politiet"],["🚗","car","אוטו","汽车","voiture","bil"],["🚚","truck","מַשָׂאִית","卡车","un camion","lastebil"],["🚜","tractor","טְרַקטוֹר","拖拉机","tracteur","traktor"],["🛺","rickshaw","ריקשה","黄包车","pousse-pousse","rickshaw"],["⛵ ","boat","סִירָה","船","bateau","båt"],["✈ ","airplane","מטוס","飞机","avion","fly"],["🚁","helicopter","מַסוֹק","直升机","hélicoptère","helikopter"],["🛰","sattelite","טלטלייט","卫星","satellite","satellitt"],["💶","money","כֶּסֶף","钱","argent","penger"],["🔪","knife","סַכִּין","刀","couteau","kniv"],["🗺","world","עוֹלָם","世界","monde","verden"],["🧱","brick","לְבֵנָה","砖","brique","murstein"],["🦽","wheelchair","כיסא גלגלים","轮椅","fauteuil roulant","rullestol"],["🎈","baloon","בלון","气球","ballon","baloon"],["🎁","gift","מתנה","礼品","cadeau","gave"],["🪀","yoyo","יו יו","悠悠球","yo-yo","yoyo"],["🪕","banjo","בַּנג'וֹ","班卓","banjo","banjo"],["📱","phone","טלפון","电话","téléphone","telefon"],["💻","laptop","מחשב נייד","笔记本电脑","portable","laptop"],["🖨","printer","מדפסת","打印机","imprimante","skriver"],["⌨ ","keyboard","מקלדת","键盘","clavier","tastatur"],["💾","floppy","תקליטון","软盘的","souple","floppy"],["📀","disk","דִיסק","磁碟","disque","disk"],["🎥","camera","מַצלֵמָה","相机","caméra","kamera"],["📼","cassette","קַלֶטֶת","暗盒","cassette","kassett"],["🕯","candle","נר","蜡烛","bougie","stearinlys"],["📖","book","סֵפֶר","书","livre","bok"],["✉ ","letter","מִכְתָב","信","lettre","brev"],["📦","box","קופסא","框","boîte","eske"],["✏ ","pencil","עִפָּרוֹן","铅笔","crayon","blyant"],["🖊","pencil","עִפָּרוֹן","铅笔","crayon","blyant"],["📈","grow","לגדול","增长","grandir","vokse"],["📌","pin","פִּין","销","épingle","tapp"],["📏","ruler","סרגל","统治者","règle","Hersker"],["✂ ","scissors","מספריים","剪刀","les ciseaux","saks"],["🔨","hammer","פטיש","锤子","marteau","hammer"],["🪓","axe","גַרזֶן","斧头","hache","øks"],["🛡","shiels","שיאלים","盾牌","shiels","Shiels"],["⚙ ","gear","גלגל שיניים","齿轮","équipement","utstyr"],["🧲","magnet","מַגנֵט","磁铁","aimant","magnet"],["🧬","dna","דנה","脱氧核糖核酸","ADN","dna"],["🔬","microscope","מִיקרוֹסקוֹפּ","显微镜","microscope","mikroskop"],["🔭","telescope","טֵלֶסקוֹפּ","望远镜","télescope","teleskop"],["💊","pill","כַּדוּר","丸","pilule","pille"],["🚪","door","דלת","门","porte","dør"],["🪑","chair","כִּסֵא","椅子","chaise","stol"],["🚽","toilet","שֵׁרוּתִים","厕所","toilette","toalett"],["🧹","broom","מְטַאטֵא","扫帚","balai","kost"]]
+;
+    // let story = ["🥄","🍎","📈","💪"];
+    let story =[];
+    let storyCounter = 0;
+
+    //build opening page - language selector and story builder
+    addElementTo(languagebox,"please select languages","div");
+    for(let i=0;i<wordBankRaw[0].length;i++){
+        addElementTo(languagebox,wordBankRaw[0][i],"a");
+    }
+    document.getElementById("emoji").style.border = "1vmin solid orange";
+    languagebox.innerHTML += "\n" + "<br><br>";
+    addElementTo(languagebox,"GO!","div");
+    languagebox.innerHTML += "\n" + "<br>";
+    addElementTo(languagebox,"or build story","div");
+    for(let i=1;i<wordBankRaw.length;i++){
+        addElementTo(storybox,wordBankRaw[i][0],"abox");
+    }
+    // let languages = ["0","1","2","4","5"];
+    let wordBankData = [];
+
+    function languageSelector(languages){
+        for (let i=0;i<wordBankRaw.length;i++) {
+            wordBankData[i] = [];
+            for (let j=0;j<languages.length;j++){
+                wordBankData[i].push(wordBankRaw[i][languages[j]]);
+            }
+        }
+        // console.log(wordBankData);
+        console.log("chosen langauges", wordBankData[0]);
+    }
+
+    function buildStory(story){
+        storyArray = [];
+        // console.log(story.length);
+        for (let i=0; i < story.length; i++) {
+            // console.log(story,story[i]);
+            for (let j=1; j < wordBankRaw.length; j++){
+                // console.log(i,j,story[i],wordBankData[j].indexOf(story[i]));
+                if (wordBankRaw[j].indexOf(story[i]) >= 0){
+                    storyArray.push(j);
+                }
+            }
+        }
+        console.log("building story of ", storyArray.length," length");
+        return storyArray;
+    }
+
+    function startgame() {
+        languageSelector(languages);
+        languagebox.style.display = "none";
+        storybox.style.display = "none";
+        gameplay.style.display = "contents";
+        buildStory(userdata);
+        // let newStory = [];
+        // for (let i=0;i<storyArray.length;i++){
+        //     if (storyArray[i] === 0 ) {
+        //     } else {
+        //         newstory.push(storyArray[i]);
+        //     }
+        // }
+        // story = newStory;
+        if (story.length > 0) {
+            addElementTo(mainbox,wordBankData[buildStory(story)[storyCounter]][Math.floor(wordBankData[0].length * Math.random())],"a");
+        } else {
+            addElementTo(mainbox,randomElement(),"a");
+        }
+
+        $('#mainbox').find('a').first().remove();
+        mainbox.children[mainbox.children.length-1].style.border = "1vmin solid orange";
+        replaceKeys();
+    }
+
+
+    var clickEvent = (function() {
+        if ('ontouchstart' in document.documentElement === true) {
+            return 'touchstart';
+        }
+        else {
+            return 'mousedown';
+        }
+    } ) ();
+    let userdata = [];
+    $(this).on(clickEvent,function() { // notice!! global event function
+        let z = event.target.id;
+        let y = $(event.target).attr('class');
+        let papa = event.target.parentNode.id;
+
+        // console.log("new click on", z, y,papa);
+        userdata.push(z);
+        if (papa === "storybox") {
+            addElementTo(languagebox,z,"abox");
+
+        }
+        if (y === "displaybox" && wordBankData.length > 0) { //if click is after game starts
+            replaceword(z);
+        }
+        if (z === "GO!") { //todo make it verify that languages were chosen
+            languages = ["0"];
+            for (let i=0;i<userdata.length;i++){
+                if (wordBankRaw[0].indexOf(userdata[i]) > -1 && languages.indexOf(userdata[i]) === -1) {
+                    languages.push(wordBankRaw[0].indexOf(userdata[i]));
+                }
+            }
+            // console.log("chosen languages:", languages);
+            let commentOn = 0;
+            if (languages.length > 1){
+                startgame();
+            } else if (commentOn===0){
+                addElementTo(languagebox,"please choose at least one verbal language","div")
+            }
+        }
+        if (wordBankRaw[0].indexOf(z) > -1) {
+            // console.log(document.getElementById(z));
+            document.getElementById(z).style.border = "thick solid orange";
+        }
+    });
+    function randomElement(a,b){
+        let x;
+        let y;
+        if (a === undefined) {
+            x = Math.floor(1 + (wordBankData.length-1) * Math.random());
+        } else { x = a }
+        if (b === undefined) {
+            y = Math.floor(wordBankData[0].length * Math.random());
+        } else { y = b }
+        // console.log(a,b,wordBankData[x][y]);
+        return wordBankData[x][y];
+    }
+
+    function addElementTo(target,elem,type){
+        var newlement = document.createElement(type);
+        newlement.classList.add("displaybox");
+        newlement.id = elem;
+        newlement.innerHTML = elem;
+        PxR = 255 - Math.random() * 45;
+        PxG = 255 - Math.random() * 45;
+        PxB = 255 - Math.random() * 45;
+        newlement.style.backgroundColor = "rgb(" + PxR + "," + PxG + "," + PxB + ")";
+        target.appendChild(newlement);
+    }
+    function advanceword(elem,story){
+        addElementTo(mainbox,elem,"a");
+        mainbox.innerHTML += "<br>";
+        storyCounter += 1;
+        if (storyCounter < story.length ) {
+            // console.log("story exists");
+            addElementTo(mainbox,wordBankData[storyArray[storyCounter]][Math.floor(wordBankData[0].length * Math.random())],"a");
+        } else {
+            addElementTo(mainbox,randomElement(),"a");
+        }
+        // scrollToBottom(mainbox);
+        window.scrollBy(0,3000)
+        // $('#mainbox' ).find('a').first().remove();
+        mainbox.children[mainbox.children.length-1].style.border = "1vmin solid orange";
+        mainbox.children[mainbox.children.length-4].style.border = "0px solid #0000FF";
+    }
+    function scrollToBottom(el) {
+        el.scrollTop = el.scrollHeight;
+    }
+    function replaceKeys() {
+
+        for (let j=0;j<Math.floor(4*Math.random());j++){
+            $('#keybox').find('a').first().remove();
+            addElementTo(keybox, randomElement(), "a");
+        }
+
+        if (story.length !== 0) {
+            addElementTo(keybox, wordBankData[storyArray[storyCounter]][Math.floor(wordBankData[0].length * Math.random())], "a");
+        } else {
+            for (let i = 0;i<wordBankData.length;i++) {
+                if (wordBankData[i].indexOf(mainbox.children[mainbox.children.length-1].id) > -1) {
+                    addElementTo(keybox, randomElement(i), "a");
+                }
+            }
+        }
+        $('#keybox').find('a').first().remove();
+
+
+        for (let j=0;j<Math.floor(4*Math.random());j++){
+            $('#keybox').find('a').first().remove();
+            addElementTo(keybox, randomElement(), "a");
+        }
+
+        for (let i=0;i<keybox.children.length;i++){
+            let correctCount = 0;
+            if (mainbox.children[mainbox.children.length-1].id === keybox.children[i].id){
+                //if the key to found is in the answers
+                // console.log("ok");
+                if (story.length !== 0) {
+                    // if in story
+                    addElementTo(keybox, randomElement(storyArray[storyCounter]), "a");
+                    keybox.children[i].remove();
+                } else {
+                    // run through and find somethine right
+                    for (let j = 0;j<wordBankData.length;j++) {
+                        if (wordBankData[j].indexOf(mainbox.children[mainbox.children.length-1].id) > -1) {
+                            addElementTo(keybox, randomElement(j), "a");
+                            keybox.children[i].remove();
+                        }
+                    }
+                }
+                i=0;
+            }
+        }
+    }
+    function replaceword(elem) {
+        let a = mainbox.children[mainbox.children.length - 1].innerHTML.trim();
+        // console.log("a",a,"elem",elem,"??",wordBankData.indexOf(a));
+        let ag = -5;
+        let bg = -6;
+        for (let i = 0; i < wordBankData.length; i++) {
+            if (wordBankData[i].indexOf(a) > -1) {
+                ag = i;
+            }
+            if (wordBankData[i].indexOf(elem) > -1) {
+                bg = i;
+            }
+        }
+        // console.log(ag,bg);
+        if (ag === bg && a !== elem) {
+            // console.log(ag, bg, "lets go");
+            advanceword(elem, story);
+            move_progress_bar();
+            //todo mode switch to random
+        }
+        replaceKeys();
+    }
+    function wincount(){
+        let count = [];
+        let addedtext = "\n";
+        for (let i = 0; i < wordBankData.length;i++) {
+            count[i] = 0;
+            for (let j=0; j < userdata.length; j++){
+                if (wordBankData[i].indexOf(userdata[j]) > -1) {
+                    count[i] += 1;
+                }
+            }
+            // console.log(count[i], wordBankData[i]);
+            if (count[i] > 0 ) {
+                addedtext += wordBankData[i][0] + count[i] + "\n";
+            }
+        }
+        alert("you won and clicked on" + addedtext);
+    }
+    let progress = 0;
+    function move_progress_bar() {
+        console.log("movig",storyCounter,story.length);
+        // if (lastclicked_gifsubtopic === dbllastclicked_gifsubtopic ){
+
+        progress += 9.1;
+        // console.log(pbar);
+        if (progress >= 100 || storyCounter === story.length ) { //todo fix counter
+            wincount();
+            progress = 0;
+            story = [];
+            //     let width = 1;
+            //     pbar.style.width = width + '%';
+            //     // elem.innerHTML = width * 1 + '%';
+            //     // document.getElementById("progemo").innerHTML = ("&nbsp; &nbsp;" + lastclicked_gifemoji ) /*insert a subtopic choice emoji*/;
+            //     window.open("/analytics2", "_self");
+            //     // $( "#mainframe" ).css( "visibility", "hidden");
+            //     // $( "#prompt" ).css( "visibility", "inherit");
+            // }
+
+            PxR = 255 - Math.random() * 15;
+            PxG = 255 - Math.random() * 15;
+            PxB = 255 - Math.random() * 15;
+            mainbox.style.backgroundColor = "rgb(" + PxR + "," + PxG + "," + PxB + ")";
+        }
+        pbar.style.width = progress + "vw";
+
+    }
+    // console.log(story);
+
+    // replaceword("x");
+</script>
+</html>
