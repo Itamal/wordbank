@@ -138,18 +138,31 @@ let wordBankRaw =
     let storyCounter = 0;
 
     //build opening page - language selector and story builder
-    addElementTo(languagebox,"please select languages","div");
-    for(let i=0;i<wordBankRaw[0].length;i++){
-        addElementTo(languagebox,wordBankRaw[0][i],"a");
-    }
-    document.getElementById("emoji").style.border = "1vmin solid orange";
-    languagebox.innerHTML += "\n" + "<br><br>";
-    addElementTo(languagebox,"GO!","div");
-    languagebox.innerHTML += "\n" + "<br>";
-    addElementTo(languagebox,"or build story","div");
-    for(let i=1;i<wordBankRaw.length;i++){
-        addElementTo(storybox,wordBankRaw[i][0],"abox");
-    }
+    let timespace= 300;
+	setTimeout(function(){
+		addElementTo(languagebox,"welcome to the multilingual wordbank by Itamar","div")
+	},timespace);
+	setTimeout(function(){
+    	addElementTo(languagebox,"please select languages to play with","div")
+    },timespace*2);
+	setTimeout(function(){
+	    for(let i=0;i<wordBankRaw[0].length;i++){
+	        addElementTo(languagebox,wordBankRaw[0][i],"a");
+	    }
+    	languagebox.innerHTML += "\n" + "<br><br>";
+    },timespace*3);
+	setTimeout(function(){
+	    document.getElementById("emoji").style.border = "1vmin solid orange"    
+	    addElementTo(languagebox,"GO!","div");
+	    languagebox.innerHTML += "\n" + "<br>";
+    },timespace*4);
+	setTimeout(function(){
+	    addElementTo(languagebox,"or build story","div");
+	    for(let i=1;i<wordBankRaw.length;i++){
+	        addElementTo(storybox,wordBankRaw[i][0],"abox");
+	    }
+    },timespace*5);
+
     // let languages = ["0","1","2","4","5"];
     let wordBankData = [];
 
