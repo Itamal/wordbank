@@ -51,7 +51,7 @@ abox {
 
 #keybox {
     font-family: monospace, Helvetica;
-    font-size:11vw;
+    font-size:10vmin;
     text-align:center;
     width: 100%;
     display: inline-grid;
@@ -237,6 +237,7 @@ let wordBankRaw =
 
         // console.log("new click on", z, y,papa);
         userdata.push(z);
+        userdata.push(Date.now());
         if (papa === "storybox") {
             addElementTo(languagebox,z,"abox");
 
@@ -395,7 +396,28 @@ let wordBankRaw =
                 addedtext += wordBankData[i][0] + count[i] + "\n";
             }
         }
-        alert("you won and clicked on" + addedtext);
+        let times = [];
+        let avg = 0;
+        let clicks = 0;
+        for (let i = 2; i<userdata.length; i++ ) {
+			// if (userdata[i]="GO!"){
+			// 	avg=0;
+			// 	clicks=0;
+			// }
+       		if (userdata[i]/1){
+       			let x = userdata[i] - userdata[i-2]; 
+				avg += x;
+				times[i]=0;
+	       		times[i]=x;
+				clicks+=1;
+			}
+			// console.log(userdata[i],i,times[i], avg);
+			// i+=1;
+        }
+        // console.log(times, avg);
+        avg = avg / clicks;
+        avg = avg/1000
+        alert("you won" + "\n avg speed:" + avg + "s" + "\n and clicked on:" + addedtext);
     }
     let progress = 0;
     function move_progress_bar() {
